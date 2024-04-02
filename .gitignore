@@ -1,0 +1,5 @@
+# ignore binary main file
+main
+
+# ignore idea directory
+.idea
