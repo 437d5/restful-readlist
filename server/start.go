@@ -4,7 +4,7 @@ package server
 import (
 	"context"
 	"fmt"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
 	"net/http"
 	"os"
@@ -13,25 +13,20 @@ import (
 
 type App struct {
 	router http.Handler
-	pdb    *pgx.Conn
+	pgpool *pgxpool.Pool
 }
 
 // NewApp creates new App entity including creating new connection to PostgresSQL
-func NewApp() *App {
+func NewApp(ctx context.Context, connString string) *App {
 	// open a new connection to postgres
-	pdb, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+	pgpool, err := pgxpool.New(ctx, connString)
 	if err != nil {
 		log.Fatal(fmt.Fprintf(os.Stderr, "Unable to create connection: %v\n", err))
 	}
-	defer func(pdb *pgx.Conn, ctx context.Context) {
-		err := pdb.Close(ctx)
-		if err != nil {
-			log.Fatal(fmt.Fprintf(os.Stderr, "Unable to close connection: %v\n", err))
-		}
-	}(pdb, context.Background())
+	defer pgpool.Close()
 
 	a := &App{
-		pdb: pdb,
+		pgpool: pgpool,
 	}
 	a.newRoutes()
 	return a
@@ -48,16 +43,12 @@ func (a *App) Start(ctx context.Context) error {
 		WriteTimeout: 15 * time.Second,
 	}
 
-	err := a.pdb.Ping(ctx)
+	err := a.pgpool.Ping(ctx)
 	if err != nil {
 		return fmt.Errorf("failed to connect to database: %w", err)
 	}
+	defer a.pgpool.Close()
 
-	defer func() {
-		if err := a.pdb.Close(ctx); err != nil {
-			fmt.Printf("failed to close connection to db: %v", err)
-		}
-	}()
 	fmt.Println("Starting server")
 
 	ch := make(chan error, 1)
@@ -74,7 +65,7 @@ func (a *App) Start(ctx context.Context) error {
 	case err = <-ch:
 		return err
 	case <-ctx.Done():
-		timeout, cancel := context.WithTimeout(context.Background(), time.Second*10)
+		timeout, cancel := context.WithTimeout(ctx, time.Second*10)
 		defer cancel()
 		return server.Shutdown(timeout)
 	}
