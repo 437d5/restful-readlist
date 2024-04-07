@@ -8,16 +8,16 @@ import (
 	"context"
 	"fmt"
 	"github.com/437d5/restful-readlist/server"
-	"os"
 	"os/signal"
 	"syscall"
 )
+
+const connString = "postgresql://slave:slave@localhost/readlist"
 
 func main() {
 	// it will stop everything if SIGINT or SIGTERM will be passed
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
-	connString := os.Getenv("CONN_STR")
 	a := server.NewApp(ctx, connString)
 
 	err := a.Start(ctx)

@@ -23,7 +23,7 @@ func NewApp(ctx context.Context, connString string) *App {
 	if err != nil {
 		log.Fatal(fmt.Fprintf(os.Stderr, "Unable to create connection: %v\n", err))
 	}
-	defer pgpool.Close()
+	// defer pgpool.Close()
 
 	a := &App{
 		pgpool: pgpool,
