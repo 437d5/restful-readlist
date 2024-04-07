@@ -32,7 +32,7 @@ func (c *Controller) Create(ctx context.Context, data models.Book) error {
 }
 
 func (c *Controller) Delete(ctx context.Context, id int) error {
-	query := `DELETE * FROM books WHERE id = $1;`
+	query := `DELETE FROM books WHERE id = $1;`
 	_, err := c.Client.Exec(ctx, query, id)
 	if err != nil {
 		return fmt.Errorf("unable to delete row: %w", err)

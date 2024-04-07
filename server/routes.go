@@ -21,9 +21,9 @@ func (a *App) loadRoutes(r *mux.Router) {
 		},
 	}
 
-	r.HandleFunc("/add", urlHandler.AddHandler).Methods("POST")
-	r.HandleFunc("/get/{id:[0-9]+}", urlHandler.GetByIDHandler).Methods("GET")
-	r.HandleFunc("/get", urlHandler.GetHandler).Methods("GET")
-	r.HandleFunc("/update/{id:[0-9]+}", urlHandler.UpdateHandler).Methods("PUT")
-	r.HandleFunc("/delete/{id:[0-9]+}", urlHandler.DeleteHandler).Methods("DELETE")
+	r.HandleFunc("/", urlHandler.AddHandler).Methods("POST")
+	r.HandleFunc("/{id:[0-9]+}", urlHandler.GetByIDHandler).Methods("GET")
+	r.HandleFunc("/", urlHandler.GetHandler).Methods("GET")
+	r.HandleFunc("/{id:[0-9]+}", urlHandler.UpdateHandler).Methods("PUT")
+	r.HandleFunc("/{id:[0-9]+}", urlHandler.DeleteHandler).Methods("DELETE")
 }

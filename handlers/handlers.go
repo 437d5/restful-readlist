@@ -17,10 +17,6 @@ type URLController struct {
 
 // AddHandler func used to add the new record in db
 func (u *URLController) AddHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		http.Error(w, "this method is not allowed", http.StatusMethodNotAllowed)
-	}
-
 	var book models.Book
 	err := json.NewDecoder(r.Body).Decode(&book)
 	if err != nil {
@@ -37,10 +33,6 @@ func (u *URLController) AddHandler(w http.ResponseWriter, r *http.Request) {
 
 // DeleteHandler func used to delete the record in db using an ID
 func (u *URLController) DeleteHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "DELETE" {
-		http.Error(w, "this method is not allowed", http.StatusMethodNotAllowed)
-	}
-
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -56,10 +48,6 @@ func (u *URLController) DeleteHandler(w http.ResponseWriter, r *http.Request) {
 
 // UpdateHandler func updates the record about book in db using an ID
 func (u *URLController) UpdateHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "PUT" {
-		http.Error(w, "this method is not allowed", http.StatusMethodNotAllowed)
-	}
-
 	var book models.Book
 	err := json.NewDecoder(r.Body).Decode(&book)
 	if err != nil {
@@ -80,10 +68,6 @@ func (u *URLController) UpdateHandler(w http.ResponseWriter, r *http.Request) {
 
 // GetByIDHandler func stands for reading data about book with concrete ID
 func (u *URLController) GetByIDHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" {
-		http.Error(w, "this method is not allowed", http.StatusMethodNotAllowed)
-	}
-
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -107,10 +91,6 @@ func (u *URLController) GetByIDHandler(w http.ResponseWriter, r *http.Request) {
 
 // GetHandler func gets the full list of books that are in db
 func (u *URLController) GetHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" {
-		http.Error(w, "this method is not allowed", http.StatusMethodNotAllowed)
-	}
-
 	rawData, err := u.Controller.Get(r.Context())
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
