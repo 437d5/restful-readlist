@@ -5,3 +5,6 @@ main
 .idea
 # ignore txt file to create db
 db_creating.txt
+# ignore Docker and compose files until it's complete
+Dockerfile
+compose.yaml
