@@ -10,7 +10,7 @@ U need to setup database with
       title VARCHAR(100) NOT NULL,
       year_published INT NOT NULL,
       rating INT CHECK (rating >= 0 AND rating <= 10)
-)
+);
 ```
 After you did it u need to edit connString const in main.go file.
 Enjoy.
